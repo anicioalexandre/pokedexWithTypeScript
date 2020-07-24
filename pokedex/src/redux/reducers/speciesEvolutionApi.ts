@@ -1,0 +1,35 @@
+import {
+  REQUEST_EVOLUTION_API,
+  REQUEST_API_FAILURE,
+  REQUEST_SPECIES_SUCCESS,
+  AppActions,
+  REQUEST_EVOLUTION_SUCCESS,
+  SAVE_ID,
+} from '../../types/constants';
+import { SpeciesEvolutionState } from '../../types/ApiState';
+
+const INITIAL_STATE: SpeciesEvolutionState = {
+  species: undefined,
+  evolutionChain: undefined,
+  loading: false,
+  error: null,
+};
+
+const speciesEvolutionApi = (state = INITIAL_STATE, action: AppActions): SpeciesEvolutionState => {
+  switch (action.type) {
+    case REQUEST_EVOLUTION_API:
+      return { ...state, loading: true };
+    case REQUEST_API_FAILURE:
+      return { ...state, loading: false, error: action.error };
+    case REQUEST_SPECIES_SUCCESS:
+      return { ...state, loading: false, species: action.species };
+    case REQUEST_EVOLUTION_SUCCESS:
+      return { ...state, loading: false, evolutionChain: action.evolutionChain };
+    case SAVE_ID:
+      return { ...state, actualPokemonId: action.id };
+    default:
+      return state;
+  }
+};
+
+export default speciesEvolutionApi;
