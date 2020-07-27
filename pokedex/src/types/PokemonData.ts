@@ -4,7 +4,7 @@ interface BaseStat {
   stat: { name: string };
 }
 
-interface Types {
+export interface Types {
   type: { name: string };
 }
 

@@ -127,8 +127,7 @@ export const selectedPokemon = (id: number): AppActions => ({
   id,
 });
 
-export const updateIndex = (index: number, pokemonId: number): AppActions => ({
+export const updateIndex = (index: number): AppActions => ({
   type: UPDATE_INDEX,
   index,
-  pokemonId,
 });

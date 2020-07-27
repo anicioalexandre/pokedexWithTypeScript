@@ -62,7 +62,6 @@ export interface SaveActualId {
 export interface updateIndex {
   type: typeof UPDATE_INDEX;
   index: number;
-  pokemonId: number;
 }
 
 export type RequestApiActions =
