@@ -19,6 +19,7 @@ import { Loading } from '../styles/Components';
 import { AppState } from '../redux/store';
 import { EvolutionObj } from '../services/evolutionArray';
 import { History } from 'history';
+import createActualIndex from '../services/createActualIndex';
 
 interface StateProps {
   evolutionChain?: EvolutionObj[];
@@ -52,9 +53,11 @@ const PokemonEvolution = ({
   history,
 }: Props) => {
   const { id } = match.params;
+  
   useEffect(() => {
     if (!actualPokemonId) saveActualId(Number(id));
   }, []);
+
   useEffect(() => {
     getEvolutionChain(`https://pokeapi.co/api/v2/pokemon-species/${id}/`);
     console.log('effect');
@@ -64,12 +67,12 @@ const PokemonEvolution = ({
     history.push(`/details/pokemon/${actualPokemonId}`);
   }, [actualPokemonId, history]);
 
-  // useEffect(() => {
-  //   if (Number(id) !== actualIndex) updateIndex(Number(id) -1)
-  //   console.log('mudei id');
-  // }, [id])
-
-  // VER EXAUSTHIVE DEPS
+  useEffect(() => {
+    const index = createActualIndex(evolutionChain, Number(id))
+    console.log(index);
+    if (index !== -1) updateIndex(index)
+    console.log('mudei id');
+  }, [id])
 
   if (loading) {
     return (
@@ -146,11 +149,7 @@ const PokemonEvolution = ({
         </EvolutionContainer>
       </>
     );
-  return (
-    <>
-      <p>Erro</p>
-    </>
-  );
+  return <></>;
 };
 
 const mapState = (state: AppState) => ({
