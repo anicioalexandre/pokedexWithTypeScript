@@ -1,10 +1,11 @@
 import React from 'react';
-import { PokemonInfo } from '../types/PokemonData';
+import { PokemonInfo, Types } from '../types/PokemonData';
 import { TypeButton, TypesContainer, ImageContainer } from '../styles/PokemonCard';
 import typesColors from '../localdata/typesColors';
+import { EvolutionObj } from '../services/evolutionArray';
 
 interface PokemonCardProps {
-  uniquePokemonData: PokemonInfo;
+  uniquePokemonData: PokemonInfo | EvolutionObj;
 }
 
 const PokemonCard: React.FC<PokemonCardProps> = ({ uniquePokemonData }) => {
@@ -22,7 +23,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ uniquePokemonData }) => {
         />
       </ImageContainer>
       <TypesContainer>
-        {types?.map(({ type }) => (
+        {(types as Types[])?.map(({ type }) => (
           <TypeButton key={type.name} background={typesColors[type.name]}>
             {type.name}
           </TypeButton>

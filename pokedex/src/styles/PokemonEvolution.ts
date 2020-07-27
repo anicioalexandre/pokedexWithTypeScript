@@ -4,7 +4,7 @@ import { PokemonCardContainer, PokemonCardStyle } from './Pokedex';
 
 type AllStyledTypes = LayoutProps & FlexboxProps;
 type Transform = { transform?: string };
-type Opacity = { opacity?: string };
+type Opacity = { opacity?: number };
 type Scale = { scale?: any };
 
 export const EvolutionContainer = styled.div`
