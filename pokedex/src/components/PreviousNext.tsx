@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { getAPI, nextPageApi, previousPageApi } from '../redux/actions';
 import { AppActions } from '../types/constants';
 import { AppState } from '../redux/store';
-import { PrevNextButtonContainer, PrevNextButton } from '../styles';
+import { PrevNextButtonContainer, PrevNextButton } from '../styles/Pokedex';
 import ArrowBack from '../localdata/ArrowBack';
 import ArrowNext from '../localdata/ArrowNext';
 

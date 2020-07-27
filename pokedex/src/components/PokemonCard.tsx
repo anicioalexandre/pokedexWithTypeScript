@@ -1,6 +1,6 @@
 import React from 'react';
 import { PokemonInfo } from '../types/PokemonData';
-import { TypeButton, TypesContainer, ImageContainer } from '../styles';
+import { TypeButton, TypesContainer, ImageContainer } from '../styles/PokemonCard';
 import typesColors from '../localdata/typesColors';
 
 interface PokemonCardProps {
