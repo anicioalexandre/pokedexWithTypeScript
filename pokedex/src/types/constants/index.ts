@@ -11,6 +11,7 @@ export const PREVIOUS_PAGE = 'PREVIOUS_PAGE';
 export const NEXT_PAGE = 'NEXT_PAGE';
 export const SAVE_NEXT_PREVIOUS_URL = 'SAVE_NEXT_PREVIOUS_URL';
 export const SAVE_ID = 'SAVE_ID';
+export const UPDATE_INDEX = 'UPDATE_INDEX';
 
 export interface RequestAction {
   type: typeof REQUEST_API;
@@ -58,6 +59,12 @@ export interface SaveActualId {
   id: number;
 }
 
+export interface updateIndex {
+  type: typeof UPDATE_INDEX;
+  index: number;
+  pokemonId: number;
+}
+
 export type RequestApiActions =
   | RequestAction
   | RequestEvolutionAction
@@ -66,5 +73,5 @@ export type RequestApiActions =
   | SpeciesSuccessAction
   | EvolutionSuccessAction
   | FailureAction;
-export type AppInteractions = NextPageApi | PreviousPageApi | SaveActualId;
+export type AppInteractions = NextPageApi | PreviousPageApi | SaveActualId | updateIndex;
 export type AppActions = RequestApiActions | AppInteractions;

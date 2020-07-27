@@ -6,10 +6,11 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AppActions } from '../types/constants';
 import { AppState } from '../redux/store';
 import { PokemonInfo } from '../types/PokemonData';
-import { PokemonCardStyle, PokemonCardContainer, Loading } from '../styles';
+import { PokemonCardStyle, PokemonCardContainer } from '../styles/Pokedex';
 import PreviousNext from '../components/PreviousNext';
 import { getAPI, selectedPokemon } from '../redux/actions';
 import PokemonCard from '../components/PokemonCard';
+import { Loading } from '../styles/Components';
 
 interface StateProps {
   actualUrlPokemon: string;
@@ -33,7 +34,7 @@ const Pokedex: React.FC<Props> = ({
 }) => {
   useEffect(() => {
     if (pokemonData.length === 0) getPokemons(actualUrlPokemon);
-  }, [actualUrlPokemon, pokemonData.length, getPokemons]);
+  }, [actualUrlPokemon, pokemonData, getPokemons]);
 
   if (loading) {
     return (
