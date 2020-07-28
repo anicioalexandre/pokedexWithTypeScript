@@ -12,7 +12,7 @@ import {
   NEXT_PAGE,
   PREVIOUS_PAGE,
   SAVE_ID,
-  UPDATE_INDEX,
+  UPDATE_INDEX_AND_ID,
 } from '../../types/constants';
 import {
   PokemonInfo,
@@ -122,12 +122,12 @@ export const getSpeciesEvolutionAPI = (url: string) => (dispatch: Dispatch<AppAc
   );
 };
 
-export const selectedPokemon = (id: number): AppActions => ({
+export const saveActualId = (id: number): AppActions => ({
   type: SAVE_ID,
   id,
 });
 
-export const updateIndex = (index: number): AppActions => ({
-  type: UPDATE_INDEX,
+export const updateIndexAndId = (index: number): AppActions => ({
+  type: UPDATE_INDEX_AND_ID,
   index,
 });

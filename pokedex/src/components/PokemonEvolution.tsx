@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
   getSpeciesEvolutionAPI,
-  updateIndex,
-  selectedPokemon,
+  updateIndexAndId,
+  saveActualId,
 } from '../redux/actions';
 import PokemonCard from './PokemonCard';
 import ArrowBack from '../localdata/ArrowBack';
@@ -29,11 +30,11 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  getEvolutionChain: (url: string) => void;
+  getSpeciesEvolutionAPI: (url: string) => void;
   saveActualId: (id: number) => void;
-  updateIndex: (index: number) => void;
+  updateIndexAndId: (index: number) => void;
 }
-type TParams = { id: string };
+
 interface OwnProps {
   match: { params: { id: string } };
   history: History;
@@ -42,41 +43,43 @@ interface OwnProps {
 type Props = StateProps & DispatchProps & OwnProps;
 
 const PokemonEvolution = ({
-  getEvolutionChain,
+  getSpeciesEvolutionAPI,
   match,
   evolutionChain,
   loading,
   saveActualId,
   actualPokemonId,
   actualIndex,
-  updateIndex,
+  updateIndexAndId,
   history,
 }: Props) => {
   const { id } = match.params;
-  
+
   useEffect(() => {
+    console.log('primeiro effect');
     if (!actualPokemonId) saveActualId(Number(id));
   }, []);
 
   useEffect(() => {
-    getEvolutionChain(`https://pokeapi.co/api/v2/pokemon-species/${id}/`);
-    console.log('effect');
+    console.log('segundo effect');
+    getSpeciesEvolutionAPI(`https://pokeapi.co/api/v2/pokemon-species/${id}/`);
   }, []);
 
   useEffect(() => {
+    console.log('terceiro effect');
     history.push(`/details/pokemon/${actualPokemonId}`);
   }, [actualPokemonId, history]);
 
   useEffect(() => {
-    const index = createActualIndex(evolutionChain, Number(id))
-    console.log(index);
-    if (index !== -1) updateIndex(index)
-    console.log('mudei id');
-  }, [id])
+    console.log('quarto effect');
+    const index = createActualIndex(evolutionChain!, Number(id)!);
+    if (index !== -1) updateIndexAndId(index!);
+  }, [id]);
 
   if (loading) {
     return (
       <Loading display="flex" alignItems="center" justifyContent="center">
+        {console.log('render loading')}
         <h3>Getting Pokémons...</h3>
       </Loading>
     );
@@ -85,9 +88,10 @@ const PokemonEvolution = ({
     return (
       <>
         <EvolutionContainer>
+          {console.log('render evolution')}
           <EvolutionButton
             type="button"
-            onClick={() => updateIndex(actualIndex! - 1)}
+            onClick={() => updateIndexAndId(actualIndex! - 1)}
             disabled={actualIndex === 0}
           >
             <ArrowBack fill={actualIndex !== 0 ? 'black' : 'gray'} />
@@ -108,24 +112,17 @@ const PokemonEvolution = ({
                 evolutionChain!.length % 2 !== 0
                   ? `translateX(${-(
                       actualIndex! * (100 / evolutionChain!.length) -
-                      (100 / evolutionChain!.length) *
-                        Math.floor(evolutionChain!.length / 2)
+                      (100 / evolutionChain!.length) * Math.floor(evolutionChain!.length / 2)
                     )}%)`
-                  : `translateX(${-(
-                      actualIndex! * (100 / evolutionChain!.length) -
-                      38
-                    )}%)`
+                  : `translateX(${-(actualIndex! * (100 / evolutionChain!.length) -38)}%)`
               }
             >
               {evolutionChain?.map((pokemonIdArray) => (
                 <PokemonCardEvolutionStyle
                   to={`/details/pokemon/${pokemonIdArray.id}`}
                   opacity={id === pokemonIdArray.id ? 1 : 0.5}
-                  scale={
-                    actualPokemonId === Number(pokemonIdArray.id)
-                      ? `scale(${1.1})`
-                      : `scale(${0.9})`
-                  }
+                  scale={id === pokemonIdArray.id ? `scale(${1.1})` : `scale(${0.9})`}
+                  filter={id === pokemonIdArray.id ? "none" : `blur(${3}px)`}
                   key={pokemonIdArray.id}
                 >
                   <PokemonCard uniquePokemonData={pokemonIdArray} />
@@ -136,20 +133,17 @@ const PokemonEvolution = ({
 
           <EvolutionButton
             type="button"
-            onClick={() => updateIndex(actualIndex! + 1)}
+            onClick={() => updateIndexAndId(actualIndex! + 1)}
             disabled={actualIndex! === evolutionChain!.length - 1}
           >
-            {console.log(actualIndex! * (100 / evolutionChain!.length))}
             <ArrowNext
-              fill={
-                actualIndex! !== evolutionChain!.length - 1 ? 'black' : 'gray'
-              }
+              fill={actualIndex! !== evolutionChain!.length - 1 ? 'black' : 'gray'}
             />
           </EvolutionButton>
         </EvolutionContainer>
       </>
     );
-  return <></>;
+  return <>{console.log('render nada')}</>;
 };
 
 const mapState = (state: AppState) => ({
@@ -160,9 +154,9 @@ const mapState = (state: AppState) => ({
 });
 
 const mapDispatch = {
-  getEvolutionChain: getSpeciesEvolutionAPI,
-  updateIndex: updateIndex,
-  saveActualId: selectedPokemon,
+  getSpeciesEvolutionAPI,
+  updateIndexAndId,
+  saveActualId,
 };
 
 export default connect(mapState, mapDispatch)(PokemonEvolution);
