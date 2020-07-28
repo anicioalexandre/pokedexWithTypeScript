@@ -11,7 +11,7 @@ export const PREVIOUS_PAGE = 'PREVIOUS_PAGE';
 export const NEXT_PAGE = 'NEXT_PAGE';
 export const SAVE_NEXT_PREVIOUS_URL = 'SAVE_NEXT_PREVIOUS_URL';
 export const SAVE_ID = 'SAVE_ID';
-export const UPDATE_INDEX = 'UPDATE_INDEX';
+export const UPDATE_INDEX_AND_ID = 'UPDATE_INDEX_AND_ID';
 
 export interface RequestAction {
   type: typeof REQUEST_API;
@@ -40,15 +40,18 @@ export interface FailureAction {
   type: typeof REQUEST_API_FAILURE;
   error: Error;
 }
+
 export interface SaveNextPreviousUrl {
   type: typeof SAVE_NEXT_PREVIOUS_URL;
   previous?: string;
   next?: string;
 }
+
 export interface PreviousPageApi {
   type: typeof PREVIOUS_PAGE;
   previous?: string;
 }
+
 export interface NextPageApi {
   type: typeof NEXT_PAGE;
   next?: string;
@@ -59,8 +62,8 @@ export interface SaveActualId {
   id: number;
 }
 
-export interface updateIndex {
-  type: typeof UPDATE_INDEX;
+export interface UpdateIndex {
+  type: typeof UPDATE_INDEX_AND_ID;
   index: number;
 }
 
@@ -72,5 +75,5 @@ export type RequestApiActions =
   | SpeciesSuccessAction
   | EvolutionSuccessAction
   | FailureAction;
-export type AppInteractions = NextPageApi | PreviousPageApi | SaveActualId | updateIndex;
+export type AppInteractions = NextPageApi | PreviousPageApi | SaveActualId | UpdateIndex;
 export type AppActions = RequestApiActions | AppInteractions;

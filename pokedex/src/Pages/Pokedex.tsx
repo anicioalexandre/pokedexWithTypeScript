@@ -8,7 +8,7 @@ import { AppState } from '../redux/store';
 import { PokemonInfo } from '../types/PokemonData';
 import { PokemonCardStyle, PokemonCardContainer } from '../styles/Pokedex';
 import PreviousNext from '../components/PreviousNext';
-import { getAPI, selectedPokemon } from '../redux/actions';
+import { getAPI, saveActualId } from '../redux/actions';
 import PokemonCard from '../components/PokemonCard';
 import { Loading } from '../styles/Components';
 
@@ -82,7 +82,7 @@ const mapDispatch = (
   dispatch: ThunkDispatch<any, any, AppActions>
 ): DispatchProps => ({
   getPokemons: bindActionCreators(getAPI, dispatch),
-  saveActualId: bindActionCreators(selectedPokemon, dispatch)
+  saveActualId: bindActionCreators(saveActualId, dispatch)
 });
 
 export default connect(mapState, mapDispatch)(Pokedex);

@@ -5,7 +5,7 @@ import {
   AppActions,
   REQUEST_EVOLUTION_SUCCESS,
   SAVE_ID,
-  UPDATE_INDEX,
+  UPDATE_INDEX_AND_ID,
 } from '../../types/constants';
 import { SpeciesEvolutionState } from '../../types/ApiState';
 import createActualIndex from '../../services/createActualIndex';
@@ -32,7 +32,7 @@ const speciesEvolutionApi = (
     case REQUEST_EVOLUTION_SUCCESS:
       const index = createActualIndex(
         action.evolutionChain,
-        state.slider.actualPokemonId
+        state.slider.actualPokemonId!
       );
       return {
         ...state,
@@ -45,7 +45,7 @@ const speciesEvolutionApi = (
         ...state,
         slider: { ...state.slider, actualPokemonId: action.id },
       };
-    case UPDATE_INDEX:
+    case UPDATE_INDEX_AND_ID:
       if (state.evolutionChain)
         return {
           ...state,
