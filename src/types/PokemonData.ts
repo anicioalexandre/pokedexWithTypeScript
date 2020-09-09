@@ -23,8 +23,7 @@ export interface AllPokemonsData {
 export interface PokemonInfo {
   id: number;
   name: string;
-  species: { url: string };
-  stats: BaseStat[];
+  stats?: BaseStat[];
   types: Types[];
 }
 

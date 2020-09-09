@@ -51,5 +51,6 @@ export const EvolutionButton = styled.button`
   cursor: pointer;
   height: 180px;
   outline: none;
+  padding: 0;
   width: 40px;
 `;
