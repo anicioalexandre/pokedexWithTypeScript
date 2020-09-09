@@ -3,9 +3,11 @@ import { Dispatch } from 'redux';
 import {
   REQUEST_API,
   REQUEST_EVOLUTION_API,
+  REQUEST_POKEMON_INFO_API,
   REQUEST_API_SUCCESS,
   REQUEST_SPECIES_SUCCESS,
   REQUEST_EVOLUTION_SUCCESS,
+  REQUEST_POKEMON_INFO_SUCCESS,
   REQUEST_API_FAILURE,
   AppActions,
   SAVE_NEXT_PREVIOUS_URL,
@@ -31,15 +33,37 @@ const requestEvolutionAPI = (): AppActions => ({
   type: REQUEST_EVOLUTION_API,
 });
 
-const requestAPISuccess = ({
-  id,
-  name,
-  species,
-  stats,
-  types,
-}: PokemonInfo): AppActions => ({
+const requestPokemonInfoAPI = (): AppActions => ({
+  type: REQUEST_POKEMON_INFO_API,
+});
+
+const requestAPISuccess = ({ id, name, types }: PokemonInfo): AppActions => ({
   type: REQUEST_API_SUCCESS,
-  info: { id, name, species, stats, types },
+  info: { id, name, types },
+});
+
+const requestEvolutionSuccess = (
+  evolutionChain: PokemonEvolution
+): AppActions => ({
+  type: REQUEST_EVOLUTION_SUCCESS,
+  evolutionChain: createEvolutionArray(evolutionChain),
+});
+
+const requestPokemonInfoSuccess = (
+  { id, name, stats, types }: PokemonInfo,
+  { capture_rate, flavor_text_entries, habitat, shape }: PokemonSpecies
+): AppActions => ({
+  type: REQUEST_POKEMON_INFO_SUCCESS,
+  info: {
+    id,
+    name,
+    stats,
+    types,
+    capture_rate,
+    flavor_text_entries,
+    habitat,
+    shape,
+  },
 });
 
 const requestSpeciesSuccess = ({
@@ -57,11 +81,6 @@ const requestSpeciesSuccess = ({
     habitat,
     shape,
   },
-});
-
-const requestEvolutionSuccess = (evolutionChain: PokemonEvolution): AppActions => ({
-  type: REQUEST_EVOLUTION_SUCCESS,
-  evolutionChain: createEvolutionArray(evolutionChain),
 });
 
 const requestAPIFailure = (error: Error): AppActions => ({
@@ -85,43 +104,6 @@ const saveNextPreviousUrl = (previous?: string, next?: string): AppActions => ({
   next,
 });
 
-export const getAPI = (url?: string) => (dispatch: Dispatch<AppActions>) => {
-  dispatch(requestAPI());
-  return fecthFunction(url!).then(
-    (allPokemonsData: AllPokemonsData) => {
-      dispatch(
-        saveNextPreviousUrl(
-          allPokemonsData.previous as string,
-          allPokemonsData.next as string,
-        ),
-      );
-      allPokemonsData.results.map((pokemonData) =>
-        fecthFunction(pokemonData.url).then(
-          (pokemonInfo: PokemonInfo) => dispatch(requestAPISuccess(pokemonInfo)),
-          (error: Error) => dispatch(requestAPIFailure(error)),
-        ),
-      );
-    },
-    (error: Error) => dispatch(requestAPIFailure(error)),
-  );
-};
-
-export const getSpeciesEvolutionAPI = (url: string) => (dispatch: Dispatch<AppActions>) => {
-  dispatch(requestEvolutionAPI());
-  return fecthFunction(url).then(
-    (pokemonSpecies: PokemonSpecies) => {
-      dispatch(requestSpeciesSuccess(pokemonSpecies));
-      return fecthFunction(pokemonSpecies.evolution_chain.url).then(
-        (pokemonEvolutionChain: PokemonEvolution) => {
-          dispatch(requestEvolutionSuccess(pokemonEvolutionChain));
-        },
-        (error: Error) => dispatch(requestAPIFailure(error)),
-      );
-    },
-    (error: Error) => dispatch(requestAPIFailure(error)),
-  );
-};
-
 export const saveActualId = (id: number): AppActions => ({
   type: SAVE_ID,
   id,
@@ -131,3 +113,58 @@ export const updateIndexAndId = (index: number): AppActions => ({
   type: UPDATE_INDEX_AND_ID,
   index,
 });
+
+export const getAPI = (url?: string) => (dispatch: Dispatch<AppActions>) => {
+  dispatch(requestAPI());
+  return fecthFunction(url!).then(
+    (allPokemonsData: AllPokemonsData) => {
+      dispatch(
+        saveNextPreviousUrl(
+          allPokemonsData.previous as string,
+          allPokemonsData.next as string
+        )
+      );
+      allPokemonsData.results.map((pokemonData) =>
+        fecthFunction(pokemonData.url).then(
+          (pokemonInfo: PokemonInfo) =>
+            dispatch(requestAPISuccess(pokemonInfo)),
+          (error: Error) => dispatch(requestAPIFailure(error))
+        )
+      );
+    },
+    (error: Error) => dispatch(requestAPIFailure(error))
+  );
+};
+
+export const getSpeciesEvolutionAPI = (url: string) => (
+  dispatch: Dispatch<AppActions>
+) => {
+  dispatch(requestEvolutionAPI());
+  return fecthFunction(url).then(
+    (pokemonSpecies: PokemonSpecies) => {
+      // dispatch(requestSpeciesSuccess(pokemonSpecies));
+      return fecthFunction(pokemonSpecies.evolution_chain.url).then(
+        (pokemonEvolutionChain: PokemonEvolution) => {
+          dispatch(requestEvolutionSuccess(pokemonEvolutionChain));
+        },
+        (error: Error) => dispatch(requestAPIFailure(error))
+      );
+    },
+    (error: Error) => dispatch(requestAPIFailure(error))
+  );
+};
+
+export const getPokemonInfo = (urlPokemon: string, urlSpecies: string) => (
+  dispatch: Dispatch<AppActions>
+) => {
+  dispatch(requestPokemonInfoAPI());
+  return fecthFunction(urlPokemon).then(
+    (pokemonInfo: PokemonInfo) =>
+      fecthFunction(urlSpecies).then(
+        (pokemonInfoSpecies: PokemonSpecies) =>
+          dispatch(requestPokemonInfoSuccess(pokemonInfo, pokemonInfoSpecies)),
+        (error: Error) => dispatch(requestAPIFailure(error))
+      ),
+    (error: Error) => dispatch(requestAPIFailure(error))
+  );
+};
