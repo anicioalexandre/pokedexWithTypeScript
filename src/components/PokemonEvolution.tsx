@@ -114,7 +114,7 @@ const PokemonEvolution = ({
                       actualIndex! * (100 / evolutionChain!.length) -
                       (100 / evolutionChain!.length) * Math.floor(evolutionChain!.length / 2)
                     )}%)`
-                  : `translateX(${-(actualIndex! * (100 / evolutionChain!.length) -38)}%)`
+                  : `translateX(${-(actualIndex! * (100 / evolutionChain!.length) -25)}%)`
               }
             >
               {evolutionChain?.map((pokemonIdArray) => (
